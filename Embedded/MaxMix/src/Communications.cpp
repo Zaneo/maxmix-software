@@ -65,6 +65,7 @@ namespace Communications
 
     void Write(Command command)
     {
+        digitalWrite(2, command);
         // Do nothing: DEBUG, NONE, ERROR
         if (command == Command::ERROR || command == Command::NONE || command == Command::DEBUG)
             return;

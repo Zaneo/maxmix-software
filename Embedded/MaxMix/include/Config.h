@@ -21,6 +21,7 @@
 //********************************************************
 #ifndef VERSION
     #define VERSION "1.5.0"
+    //#define VERSION "1.4.7"
 #endif
 
 //********************************************************
@@ -57,9 +58,9 @@ static const uint64_t SERIAL_TIMEOUT = 10;
     // OLED SCL - 19 //A5
 # elif (ESP32)
     static const uint8_t  PIN_PIXELS = 2; //D12
-    static const uint8_t  PIN_ENCODER_OUTA = 13; //A1
+    static const uint8_t  PIN_ENCODER_OUTA = 14; //A1
     static const uint8_t  PIN_ENCODER_OUTB = 12; //A2
-    static const uint8_t  PIN_ENCODER_SWITCH = 17; //A3
+    static const uint8_t  PIN_ENCODER_SWITCH = 13; //A3
 #else
     #error Unsuported Platform Target.
 #endif

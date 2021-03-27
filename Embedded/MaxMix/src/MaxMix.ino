@@ -85,7 +85,6 @@ void timerIsr()
 void setup()
 {
     ResetState();
-    Serial.begin(115200);
 
     // --- Comms
     Communications::Initialize();
@@ -106,10 +105,9 @@ void setup()
     g_Encoder.begin(true);
     Timer1.initialize(1000);
     Timer1.attachInterrupt(timerIsr);
-
-    pinMode(2, OUTPUT);
-    Serial.println("Setup done");
     
+    pinMode(26, OUTPUT);
+    pinMode(27, OUTPUT);
 }
 
 //---------------------------------------------------------
@@ -119,9 +117,6 @@ void loop()
 
     uint32_t last = g_Now;
     g_Now = millis();
-
-    Serial.println("Time:");
-    Serial.println(g_Now);
 
     Command command = Communications::Read();
     // Returns the type of message we recieved, update oled if we recieved data that impacts what is currently on display
@@ -139,7 +134,6 @@ void loop()
     {
         g_LastActivity = g_Now;
         g_DisplayDirty = true;
-        digitalWrite(2, HIGH);
     }
 
     if (ProcessEncoderButton())
@@ -172,7 +166,6 @@ void loop()
     if ((g_SessionInfo.mode != DisplayMode::MODE_SPLASH) && (g_Now - g_HeartbeatTimeout < 0x80000000U))
         ResetState();
 
-    digitalWrite(2, LOW);
 }
 
 //---------------------------------------------------------
@@ -308,15 +301,21 @@ bool ProcessEncoderRotation()
     g_EncoderSteps = 0;
     sei();
 
-    if (encoderSteps == 0)
+    if (encoderSteps == 0){
         return false;
+    }
 
     uint32_t deltaTime = g_Now - g_LastSteps;
     g_LastSteps = g_Now;
 
-    if (g_DisplayAsleep || g_SessionInfo.mode == DisplayMode::MODE_SPLASH)
+    if (g_SessionInfo.mode == DisplayMode::MODE_SPLASH)
+        digitalWrite(27, HIGH);
+    else
+        digitalWrite(27, LOW);
+    if (g_DisplayAsleep || g_SessionInfo.mode == DisplayMode::MODE_SPLASH){
         return true;
-
+    }
+    digitalWrite(27, LOW);
     bool inGameMode = g_SessionInfo.mode == DisplayMode::MODE_GAME;
     if ((inGameMode && g_ModeStates.states[g_SessionInfo.mode] == STATE_GAME_EDIT) || (!inGameMode && g_ModeStates.states[g_SessionInfo.mode] == STATE_EDIT))
     {
@@ -343,11 +342,13 @@ bool ProcessEncoderRotation()
     }
     else
     {
+        digitalWrite(27, HIGH);
         if (encoderSteps > 0)
             NextSession();
         else
             PreviousSession();
         Display::ResetTimers();
+        digitalWrite(27, LOW);
     }
 
     return true;
