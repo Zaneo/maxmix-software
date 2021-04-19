@@ -6,6 +6,7 @@
  *  Modified April 2012 by Paul Stoffregen - portable to other AVR chips, use inline functions
  *  Modified again, June 2014 by Paul Stoffregen - support Teensy 3.x & even more AVR chips
  *  Modified July 2017 by Stoyko Dimitrov - added support for ATTiny85 except for the PWM functionality
+ *  Modified March 2020 by Gareth Higgins - added support for ESP32
  *  
  *
  *  This is free software. You can redistribute it and/or modify it under
